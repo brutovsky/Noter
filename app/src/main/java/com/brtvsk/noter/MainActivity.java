@@ -11,6 +11,7 @@ import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
         };
         drawerLayout.setDrawerListener(drawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         PreferenceManager
                 .setDefaultValues(this, R.xml.preference_layout, false);
@@ -88,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
         drawerLayout = findViewById(R.id.drawer_layout);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.println(Log.ERROR,"DESTROYED","DESTROUED ????");
     }
 
     @Override
