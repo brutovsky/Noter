@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Set;
 
@@ -69,6 +72,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        PreferenceManager
+                .setDefaultValues(this, R.xml.preference_layout, false);
+
+        SharedPreferences sharedPref =
+                PreferenceManager
+                        .getDefaultSharedPreferences(this);
+
+        String username = sharedPref.getString
+                (SettingsFragment.KEY_PREF_USERNAME, "ERROR");
+
+        Toast.makeText(this, "Hello " + username + " !",
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
