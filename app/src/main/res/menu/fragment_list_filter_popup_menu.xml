@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/filter_important"
+        android:title="@string/important_marker"
+        android:checkable="true" />
+    <item
+        android:id="@+id/filter_default"
+        android:title="@string/default_marker"
+        android:checkable="true" />
+</menu>

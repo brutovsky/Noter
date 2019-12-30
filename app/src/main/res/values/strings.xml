@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Noter</string>
+
+    <string name="init_description_text">New Note</string>
+    <string name="init_note_text">Note was created </string>
+
+    <string name="important_marker">IMPORTANT</string>
+    <string name="default_marker">DEFAULT</string>
+
+    <string name="filter_item">Filter</string>
+    <string name="sortby_item">Sort By</string>
+    <string name="addnote_item">Add Note</string>
+    <string name="deletenote_item">Delete Note</string>
+
+    <string name="sortby_description">By description</string>
+    <string name="sortby_date">By date</string>
+    <string name="sortby_importance">By importance</string>
+
+    <string-array name="titles">
+        <item>Home</item>
+        <item>Options</item>
+    </string-array>
+
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+</resources>
