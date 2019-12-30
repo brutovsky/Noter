@@ -1,15 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="key3"
-        android:summary="CheckBox Summary"
-        android:title="CheckBox Preference" />
-
     <EditTextPreference
         android:defaultValue="brtvsk"
         android:dialogMessage="Change username"
         android:key="username_preference"
-        android:summary="change"
+        android:summary=""
         android:title="Username" />
     <ListPreference
         android:defaultValue="dd-MMM-yyyy HH:mm:ss"
@@ -19,10 +13,5 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/dateformat_preference" />
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="example_switch"
-        android:summary="Switch Summary"
-        android:title="Switch Preference" />
 
 </PreferenceScreen>

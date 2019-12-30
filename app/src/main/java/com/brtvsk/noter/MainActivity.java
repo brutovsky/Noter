@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
-import android.app.FragmentTransaction;
+
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView drawerList;
     private Fragment fragment = null;
     private ActionBarDrawerToggle drawerToggle;
+
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Hello " + username + " !",
                 Toast.LENGTH_LONG).show();
+
+        drawerLayout = findViewById(R.id.drawer_layout);
     }
 
     @Override
@@ -102,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            drawerLayout = findViewById(R.id.drawer_layout);
+            drawerLayout.closeDrawer(drawerList);
             selectItem(position);
         }
     }
