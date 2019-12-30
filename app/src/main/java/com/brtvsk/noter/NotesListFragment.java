@@ -297,25 +297,40 @@ public class NotesListFragment extends Fragment {
     }
 
     private void itemFilterPopup() {
-        View vItem = getActivity().findViewById(R.id.menu_item_sortby);
+        View vItem = getActivity().findViewById(R.id.menu_item_filter);
         PopupMenu popup = new PopupMenu(getActivity(), vItem);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.fragment_list_sort_popup_menu, popup.getMenu());
+        inflater.inflate(R.menu.fragment_list_filter_popup_menu, popup.getMenu());
+
+        if (filter.contains(Markers.DEFAULT))
+            ((MenuItem) popup.getMenu().findItem(R.id.filter_default)).setChecked(true);
+        if (filter.contains(Markers.IMPORTANT))
+            ((MenuItem) popup.getMenu().findItem(R.id.filter_important)).setChecked(true);
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.sortby_description:
-                        NotesStorage.getInstance(getActivity()).sortBy(NoteDBSchema.NoteTable.Cols.DESCRIPTION);
+                    case R.id.filter_default: {
+                        if (menuItem.isChecked()) {
+                            menuItem.setChecked(false);
+                            filter.remove(Markers.DEFAULT);
+                        } else {
+                            menuItem.setChecked(true);
+                            filter.add(Markers.DEFAULT);
+                        }
                         break;
-                    case R.id.sortby_date:
-                        NotesStorage.getInstance(getActivity()).sortBy(NoteDBSchema.NoteTable.Cols.DATE);
+                    }
+                    case R.id.filter_important: {
+                        if (menuItem.isChecked()) {
+                            menuItem.setChecked(false);
+                            filter.remove(Markers.IMPORTANT);
+                        } else {
+                            menuItem.setChecked(true);
+                            filter.add(Markers.IMPORTANT);
+                        }
                         break;
-                    case R.id.sortby_reset:
-                        NotesStorage.getInstance(getActivity()).sortBy(NoteDBSchema.NoteTable.Cols.MARKER);
-                        break;
-                    default:
-                        return false;
+                    }
                 }
                 updateUI();
                 return true;
