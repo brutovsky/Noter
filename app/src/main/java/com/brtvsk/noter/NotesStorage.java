@@ -49,17 +49,10 @@ public class NotesStorage {
         return notes;
     }
 
-    public List<Note> getNotes(Set<Markers> filter) {
+    public List<Note> getNotes(String[] filter) {
         List<Note> notes = new ArrayList<>();
 
-        String[] args = new String[filter.size()];
-        Iterator<Markers> it = filter.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            args[i++] = it.next().toString();
-        }
-
-        NoteCursorWrapper cursor = queryNotes(NoteTable.Cols.MARKER + "=? OR " + NoteTable.Cols.MARKER + "=?", args);
+        NoteCursorWrapper cursor = queryNotes(NoteTable.Cols.MARKER + "=? OR " + NoteTable.Cols.MARKER + "=?", filter);
 
         try {
             cursor.moveToFirst();

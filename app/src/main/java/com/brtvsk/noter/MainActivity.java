@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 
@@ -26,30 +27,25 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] titles;
     private ListView drawerList;
-    private Fragment fragment = null;
+    private Fragment fragment;
     private ActionBarDrawerToggle drawerToggle;
 
+    private NotesListFragment noteListFragment;
+    private SettingsFragment settingsFragment;
+
     private DrawerLayout drawerLayout;
+
+    public static final String NOTES_LIST_TAG = "notesListTag";
+    public static final String SETTINGS_TAG = "settingsTag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        FragmentManager fm = getSupportFragmentManager();
 
-        fragment = new NotesListFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-        /*
-        fragment = new NotesListFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, fragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
-*/
+        manageFragmentTransaction(NOTES_LIST_TAG);
+
         titles = getResources().getStringArray(R.array.titles);
         drawerList = (ListView) findViewById(R.id.drawer);
         drawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -92,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.println(Log.ERROR,"DESTROYED","DESTROUED ????");
     }
 
     @Override
@@ -120,23 +115,12 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
         switch (position) {
             case 0:
-                fragment = new NotesListFragment();
-                break;
+                manageFragmentTransaction(NOTES_LIST_TAG);
+                return;
             case 1:
-                fragment = new SettingsFragment();
-                break;
+                manageFragmentTransaction(SETTINGS_TAG);
+                return;
         }
-        /*
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.
-                fragment_container, fragment);
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();*/
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 
     @Override
@@ -149,6 +133,43 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void manageFragmentTransaction(String selectedFrag) {
+        switch (selectedFrag) {
+            case NOTES_LIST_TAG: {
+                if (getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG) != null) {
+                    //if the fragment exists, show it.
+                    getSupportFragmentManager().beginTransaction().show(getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG)).commit();
+                } else {
+                    //if the fragment does not exist, add it to fragment manager.
+                    noteListFragment = new NotesListFragment();
+                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, noteListFragment, NOTES_LIST_TAG).commit();
+                }
+                if (getSupportFragmentManager().findFragmentByTag(SETTINGS_TAG) != null) {
+                    //if the other fragment is visible, hide it.
+                    getSupportFragmentManager().beginTransaction().hide(getSupportFragmentManager().findFragmentByTag(SETTINGS_TAG)).commit();
+                }
+                fragment = noteListFragment;
+                return;
+            }
+            case SETTINGS_TAG: {
+                if (getSupportFragmentManager().findFragmentByTag(SETTINGS_TAG) != null) {
+                    //if the fragment exists, show it.
+                    getSupportFragmentManager().beginTransaction().show(getSupportFragmentManager().findFragmentByTag(SETTINGS_TAG)).commit();
+                } else {
+                    //if the fragment does not exist, add it to fragment manager.
+                    settingsFragment = new SettingsFragment();
+                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, settingsFragment, SETTINGS_TAG).commit();
+                }
+                if (getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG) != null) {
+                    //if the other fragment is visible, hide it.
+                    getSupportFragmentManager().beginTransaction().hide(getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG)).commit();
+                }
+                fragment = settingsFragment;
+                return;
+            }
+        }
     }
 
 }

@@ -35,6 +35,7 @@ public class NotePagerActivity extends AppCompatActivity {
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
         viewPager = findViewById(R.id.activity_note_pager_view_pager);
+
         notes = NotesStorage.getInstance(this).getNotes();
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {

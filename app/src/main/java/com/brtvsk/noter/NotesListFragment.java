@@ -29,6 +29,7 @@ import com.brtvsk.noter.database.NoteDBSchema;
 import com.brtvsk.noter.utils.ItemTouchHelperAdapter;
 import com.brtvsk.noter.utils.SimpleItemTouchHelperCallback;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -40,16 +41,13 @@ import java.util.Set;
  */
 public class NotesListFragment extends Fragment {
 
+    public static final String EXTRA_FILTER = "FILTER";
+
     private RecyclerView recView;
     private NotesAdapter notesAdapter;
     private static final String DATE_FORMAT = "dd-MMM-yyyy HH:mm:ss";
 
-    private Set<Markers> filter = new HashSet<>();
-
-    {
-        filter.add(Markers.IMPORTANT);
-        filter.add(Markers.DEFAULT);
-    }
+    private Set<String> filter;
 
     public NotesListFragment() {
     }
@@ -57,7 +55,25 @@ public class NotesListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            filter = new HashSet<>(Arrays.asList(savedInstanceState.getStringArray(EXTRA_FILTER)));
+            Log.println(Log.ERROR,"LOAD",filter.toString());
+        } else {
+            {
+                filter = new HashSet<>();
+                filter.add(Markers.IMPORTANT.toString());
+                filter.add(Markers.DEFAULT.toString());
+            }
+        }
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.println(Log.ERROR,"SAVE",filter.toString());
+        String[] filtr = new String[filter.size()];
+        outState.putStringArray(EXTRA_FILTER, filter.toArray(filtr));
     }
 
     @Override
@@ -79,7 +95,8 @@ public class NotesListFragment extends Fragment {
 
     private void updateUI() {
         NotesStorage noteStorage = NotesStorage.getInstance(getActivity());
-        List<Note> notes = noteStorage.getNotes(filter);
+        String[] filtr = new String[filter.size()];
+        List<Note> notes = noteStorage.getNotes(filter.toArray(filtr));
         if (notesAdapter == null) {
             notesAdapter = new NotesAdapter(notes);
             recView.setAdapter(notesAdapter);
@@ -119,7 +136,7 @@ public class NotesListFragment extends Fragment {
             this.note = note;
             description.setText(note.getDescription());
 
-            String dateFormat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingsFragment.KEY_PREF_DATEFORMAT,DATE_FORMAT);
+            String dateFormat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingsFragment.KEY_PREF_DATEFORMAT, DATE_FORMAT);
 
             String dateString = DateFormat.format(dateFormat,
                     note.getDate()).toString();
@@ -307,9 +324,9 @@ public class NotesListFragment extends Fragment {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.fragment_list_filter_popup_menu, popup.getMenu());
 
-        if (filter.contains(Markers.DEFAULT))
+        if (filter.contains(Markers.DEFAULT.toString()))
             ((MenuItem) popup.getMenu().findItem(R.id.filter_default)).setChecked(true);
-        if (filter.contains(Markers.IMPORTANT))
+        if (filter.contains(Markers.IMPORTANT.toString()))
             ((MenuItem) popup.getMenu().findItem(R.id.filter_important)).setChecked(true);
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -319,20 +336,20 @@ public class NotesListFragment extends Fragment {
                     case R.id.filter_default: {
                         if (menuItem.isChecked()) {
                             menuItem.setChecked(false);
-                            filter.remove(Markers.DEFAULT);
+                            filter.remove(Markers.DEFAULT.toString());
                         } else {
                             menuItem.setChecked(true);
-                            filter.add(Markers.DEFAULT);
+                            filter.add(Markers.DEFAULT.toString());
                         }
                         break;
                     }
                     case R.id.filter_important: {
                         if (menuItem.isChecked()) {
                             menuItem.setChecked(false);
-                            filter.remove(Markers.IMPORTANT);
+                            filter.remove(Markers.IMPORTANT.toString());
                         } else {
                             menuItem.setChecked(true);
-                            filter.add(Markers.IMPORTANT);
+                            filter.add(Markers.IMPORTANT.toString());
                         }
                         break;
                     }

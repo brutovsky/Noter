@@ -17,6 +17,6 @@
         android:id="@+id/menu_item_new_note"
         android:title="@string/addnote_item"
         android:icon="@drawable/add_24dp"
-        app:showAsAction="ifRoom|withText" >
+        app:showAsAction="always" >
     </item>
 </menu>
