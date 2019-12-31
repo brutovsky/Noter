@@ -113,6 +113,11 @@ public class NoteFragment extends Fragment {
                 startActivity(intent);
                 return true;
             }
+            case R.id.menu_item_edit:{
+                Intent intent = NoteModificationActivity.newIntent(getActivity(),note.getId());
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

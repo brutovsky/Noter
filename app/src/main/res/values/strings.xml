@@ -13,6 +13,7 @@
     <string name="sortby_item">Sort By</string>
     <string name="addnote_item">Add Note</string>
     <string name="deletenote_item">Delete Note</string>
+    <string name="editnote_item">Edit Note</string>
 
     <string name="sortby_description">By description</string>
     <string name="sortby_date">By date</string>

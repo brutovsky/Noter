@@ -34,7 +34,7 @@ public class NotePagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_pager);
 
-        UUID crimeId = (UUID) getIntent()
+        UUID noteId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
         String[] filter = getIntent().getStringArrayExtra(EXTRA_FILTER);
@@ -56,7 +56,7 @@ public class NotePagerActivity extends AppCompatActivity {
             }
         });
         for (int i = 0; i < notes.size(); i++) {
-            if (notes.get(i).getId().equals(crimeId)) {
+            if (notes.get(i).getId().equals(noteId)) {
                 viewPager.setCurrentItem(i);
                 break;
             }

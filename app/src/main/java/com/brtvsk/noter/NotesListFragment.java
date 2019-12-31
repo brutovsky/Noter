@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,12 +82,10 @@ public class NotesListFragment extends Fragment {
         recView.setLayoutManager(new LinearLayoutManager(
                 (getActivity())));
         updateUI();
-        //
         ItemTouchHelper.Callback callback =
                 new SimpleItemTouchHelperCallback(notesAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recView);
-        //
         return v;
     }
 
@@ -279,12 +278,9 @@ public class NotesListFragment extends Fragment {
     }
 
     private boolean createNote() {
-        int order = NotesStorage.getInstance(getActivity()).getOrder() + 1;
-        Note note = new Note(order);
-        NotesStorage.getInstance(getActivity()).addNote(note);
-        Intent intent = NotePagerActivity
-                .newIntent(getActivity(), note.getId(), new String[]{Markers.DEFAULT.toString(), Markers.IMPORTANT.toString()});
-        startActivity(intent);
+        Log.println(Log.ERROR,"AK","ad");
+        startActivity(NoteModificationActivity
+                .newIntent(getActivity()));
         return true;
     }
 
