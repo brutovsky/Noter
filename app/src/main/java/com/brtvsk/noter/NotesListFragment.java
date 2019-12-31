@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,7 +56,6 @@ public class NotesListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             filter = new HashSet<>(Arrays.asList(savedInstanceState.getStringArray(EXTRA_FILTER)));
-            Log.println(Log.ERROR,"LOAD",filter.toString());
         } else {
             {
                 filter = new HashSet<>();
@@ -71,7 +69,6 @@ public class NotesListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.println(Log.ERROR,"SAVE",filter.toString());
         String[] filtr = new String[filter.size()];
         outState.putStringArray(EXTRA_FILTER, filter.toArray(filtr));
     }
@@ -174,8 +171,9 @@ public class NotesListFragment extends Fragment {
                     break;
                 }
                 default: {
+                    String[] filtr = new String[filter.size()];
                     Intent intent = NotePagerActivity.newIntent(getActivity(),
-                            note.getId());
+                            note.getId(), filter.toArray(filtr));
                     startActivity(intent);
                 }
             }
@@ -285,7 +283,7 @@ public class NotesListFragment extends Fragment {
         Note note = new Note(order);
         NotesStorage.getInstance(getActivity()).addNote(note);
         Intent intent = NotePagerActivity
-                .newIntent(getActivity(), note.getId());
+                .newIntent(getActivity(), note.getId(), new String[]{Markers.DEFAULT.toString(), Markers.IMPORTANT.toString()});
         startActivity(intent);
         return true;
     }

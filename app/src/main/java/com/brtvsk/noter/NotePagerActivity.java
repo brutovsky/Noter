@@ -19,10 +19,13 @@ public class NotePagerActivity extends AppCompatActivity {
     private List<Note> notes;
     private static final String EXTRA_NOTE_ID =
             "NOTE_ID";
+    private static final String EXTRA_FILTER =
+            "FILTER";
 
-    public static Intent newIntent(Context packageContext, UUID noteID) {
+    public static Intent newIntent(Context packageContext, UUID noteID, String[] filter) {
         Intent intent = new Intent(packageContext, NotePagerActivity.class);
         intent.putExtra(EXTRA_NOTE_ID, noteID);
+        intent.putExtra(EXTRA_FILTER,filter);
         return intent;
     }
 
@@ -34,9 +37,11 @@ public class NotePagerActivity extends AppCompatActivity {
         UUID crimeId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
+        String[] filter = getIntent().getStringArrayExtra(EXTRA_FILTER);
+
         viewPager = findViewById(R.id.activity_note_pager_view_pager);
 
-        notes = NotesStorage.getInstance(this).getNotes();
+        notes = NotesStorage.getInstance(this).getNotes(filter);
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
