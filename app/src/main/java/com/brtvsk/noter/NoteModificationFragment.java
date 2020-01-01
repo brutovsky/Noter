@@ -20,16 +20,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.brtvsk.noter.utils.TextChangedListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.UUID;
 
-public class NoteModificationFragment extends Fragment {
+public class NoteModificationFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_NOTE_ID = "note_id";
 
     private EditText noteEditText;
     private EditText noteEditDescription;
     private ImageView noteMarkerView;
+    private ExtendedFloatingActionButton saveButton;
     private Note note;
 
     public NoteModificationFragment() {
@@ -42,7 +44,6 @@ public class NoteModificationFragment extends Fragment {
         if (id == null) note = newNote();
         else {
             note = NotesStorage.getInstance(getActivity()).getNote(id);
-            Log.println(Log.ERROR,"ERROr",note.getId().toString());
         }
         setHasOptionsMenu(true);
     }
@@ -53,9 +54,26 @@ public class NoteModificationFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_note_modification, container, false);
         noteEditText = v.findViewById(R.id.mod_note_fragment_text);
         noteEditText.setText(note.getNote());
+
+        noteEditText.addTextChangedListener(new TextChangedListener<EditText>(noteEditText) {
+            @Override
+            public void onTextChanged(EditText target, Editable s) {
+                note.setNote(s.toString());
+            }
+        });
+
         noteEditDescription = v.findViewById(R.id.mod_note_fragment_description);
         noteEditDescription.setText(note.getDescription());
+
+        noteEditDescription.addTextChangedListener(new TextChangedListener<EditText>(noteEditDescription) {
+            @Override
+            public void onTextChanged(EditText target, Editable s) {
+                note.setDescription(s.toString());
+            }
+        });
+
         noteMarkerView = v.findViewById(R.id.mod_note_fragment_marker);
+
 
         switch (note.getMarker()) {
             case DEFAULT: {
@@ -68,6 +86,8 @@ public class NoteModificationFragment extends Fragment {
             }
         }
 
+        saveButton = v.findViewById(R.id.mode_save_button);
+        saveButton.setOnClickListener(this);
         return v;
     }
 
@@ -84,4 +104,18 @@ public class NoteModificationFragment extends Fragment {
         return new Note(order);
     }
 
+    @Override
+    public void onClick(View view) {
+        Log.println(Log.ERROR,"AD","Aa");
+        switch (view.getId()) {
+            case R.id.mode_save_button: {
+                if (NotesStorage.getInstance(getActivity()).getNote(note.getId()) == null)
+                    NotesStorage.getInstance(getActivity()).addNote(note);
+                else
+                    NotesStorage.getInstance(getActivity()).updateNote(note);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
 }
