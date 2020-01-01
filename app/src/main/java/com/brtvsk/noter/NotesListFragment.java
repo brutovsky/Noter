@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -111,7 +113,7 @@ public class NotesListFragment extends Fragment {
     private class NoteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView description;
         private TextView date;
-        private Button popup;
+        private ImageView popup;
         private Note note;
 
         public NoteHolder(View itemView) {
@@ -181,11 +183,13 @@ public class NotesListFragment extends Fragment {
         private void setMarkerImage(Markers marker) {
             switch (marker) {
                 case DEFAULT: {
-                    popup.setBackgroundResource(R.drawable.default_24dp);
+                    popup.setImageResource(R.drawable.default_24dp);
+                    //popup.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorDefault));
                     break;
                 }
                 case IMPORTANT: {
-                    popup.setBackgroundResource(R.drawable.star_24dp);
+                    popup.setImageResource(R.drawable.star_24dp);
+                    //popup.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorStar));
                     break;
                 }
             }

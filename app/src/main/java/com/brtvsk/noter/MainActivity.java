@@ -2,6 +2,7 @@ package com.brtvsk.noter;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -83,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
         drawerLayout = findViewById(R.id.drawer_layout);
+
+        setActionBarTitle(0);
+//Закрытие выдвижной панели.
+        drawerLayout.closeDrawer(drawerList);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    private void setActionBarTitle(int position) {
+        String[] titles = getResources().getStringArray(R.array.titles);
+        getSupportActionBar().setTitle(titles[position]);
     }
 
     @Override
@@ -108,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             drawerLayout = findViewById(R.id.drawer_layout);
             drawerLayout.closeDrawer(drawerList);
+            setActionBarTitle(position);
             selectItem(position);
         }
     }

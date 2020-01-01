@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    layout_height="wrap_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <GridLayout xmlns:tools="http://schemas.android.com/tools"
+
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/note_item_box"
@@ -12,7 +16,7 @@
         android:rowCount="2"
         tools:context=".MainActivity">
 
-        <Button
+        <ImageView
             android:id="@+id/note_popup"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
@@ -42,4 +46,5 @@
             android:textAlignment="center"></TextView>
 
     </GridLayout>
+
 </androidx.cardview.widget.CardView>
