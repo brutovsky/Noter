@@ -26,6 +26,8 @@
 
     <string name="dateformat_preference">Date Format</string>
 
+    <string name="save">Save</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="titles">
         <item>Home</item>
