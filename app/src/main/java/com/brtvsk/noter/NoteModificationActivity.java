@@ -1,6 +1,7 @@
 package com.brtvsk.noter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,7 @@ import android.util.Log;
 
 import java.util.UUID;
 
-public class NoteModificationActivity extends AppCompatActivity {
+public class NoteModificationActivity extends AppCompatActivity{
 
     private static final String EXTRA_NOTE_ID =
             "NOTE_ID";

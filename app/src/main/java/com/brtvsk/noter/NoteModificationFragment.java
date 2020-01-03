@@ -1,11 +1,15 @@
 package com.brtvsk.noter;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -27,6 +31,8 @@ import java.util.UUID;
 public class NoteModificationFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_NOTE_ID = "note_id";
+
+    private static final String DIALOG_TOSAVE = "yes_or_no";
 
     private EditText noteEditText;
     private EditText noteEditDescription;
@@ -106,15 +112,38 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        Log.println(Log.ERROR,"AD","Aa");
+        Log.println(Log.ERROR, "AD", "Aa");
         switch (view.getId()) {
             case R.id.mode_save_button: {
-                if (NotesStorage.getInstance(getActivity()).getNote(note.getId()) == null)
-                    NotesStorage.getInstance(getActivity()).addNote(note);
-                else
-                    NotesStorage.getInstance(getActivity()).updateNote(note);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
+                onDialogCreate(DIALOG_TOSAVE).show();
+            }
+        }
+    }
+
+    private Dialog onDialogCreate(String tag) {
+        switch (tag) {
+            case DIALOG_TOSAVE: {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.toSave).setCancelable(true).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (NotesStorage.getInstance(getActivity()).getNote(note.getId()) == null)
+                            NotesStorage.getInstance(getActivity()).addNote(note);
+                        else
+                            NotesStorage.getInstance(getActivity()).updateNote(note);
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                return builder.create();
+            }
+            default: {
+                return null;
             }
         }
     }

@@ -28,6 +28,10 @@
 
     <string name="save">Save</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="toSave">Do tou want to save changes ?</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="titles">
         <item>Home</item>
