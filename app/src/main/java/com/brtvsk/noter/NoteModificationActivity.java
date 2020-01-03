@@ -23,8 +23,6 @@ public class NoteModificationActivity extends AppCompatActivity{
         UUID noteID = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
-        Log.println(Log.ERROR,"AHAHAH","AHAHAH");
-
         getSupportFragmentManager().beginTransaction().replace(R.id.notemodification_container, NoteModificationFragment.newInstance(noteID)).commit();
     }
 

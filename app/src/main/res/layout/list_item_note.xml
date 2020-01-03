@@ -6,45 +6,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/note_item_box"
-        android:columnCount="2"
         android:orientation="horizontal"
-        android:rowCount="2"
         tools:context=".MainActivity">
 
-        <ImageView
-            android:id="@+id/note_popup"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/note_decription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"></TextView>
+            <TextView
+                android:id="@+id/note_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"></TextView>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_rowSpan="2"
-            android:layout_column="1"
-            android:layout_gravity="center_vertical" />
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/note_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center_vertical"
-            android:textAlignment="center"></TextView>
+            <ImageView
+                android:id="@+id/note_popup"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/note_decription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center_vertical"
-            android:textAlignment="center"></TextView>
-
-    </GridLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

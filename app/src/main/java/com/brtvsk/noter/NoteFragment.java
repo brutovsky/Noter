@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.brtvsk.noter.utils.TextChangedListener;
 
@@ -27,7 +28,7 @@ public class NoteFragment extends Fragment {
     private static final String ARG_NOTE_ID = "note_id";
 
     private EditText noteEditText;
-    private EditText noteEditDescription;
+    private TextView descriptionView;
     private ImageView noteMarkerView;
     private Note note;
 
@@ -61,15 +62,8 @@ public class NoteFragment extends Fragment {
             }
         });
 
-        noteEditDescription = v.findViewById(R.id.note_fragment_description);
-        noteEditDescription.setText(note.getDescription());
-        noteEditDescription.addTextChangedListener(new TextChangedListener<EditText>(noteEditDescription) {
-            @Override
-            public void onTextChanged(EditText target, Editable s) {
-                note.setDescription(s.toString());
-                NotesStorage.getInstance(getActivity()).updateNote(note);
-            }
-        });
+        descriptionView = v.findViewById(R.id.note_fragment_description);
+        descriptionView.setText(note.getDescription());
 
         noteMarkerView = v.findViewById(R.id.note_fragment_marker);
 

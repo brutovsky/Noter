@@ -91,7 +91,7 @@ public class NotesListFragment extends Fragment {
         return v;
     }
 
-    private void updateUI() {
+    public void updateUI() {
         NotesStorage noteStorage = NotesStorage.getInstance(getActivity());
         String[] filtr = new String[filter.size()];
         List<Note> notes = noteStorage.getNotes(filter.toArray(filtr));
@@ -359,4 +359,9 @@ public class NotesListFragment extends Fragment {
         popup.show();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.println(Log.ERROR,"AS","aSFsa");
+    }
 }

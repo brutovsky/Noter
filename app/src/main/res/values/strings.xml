@@ -32,6 +32,8 @@
     <string name="no">No</string>
     <string name="toSave">Do tou want to save changes ?</string>
 
+    <string name="hintDescription">Description</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="titles">
         <item>Home</item>

@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -22,13 +23,35 @@
             android:rowCount="3"
             tools:context=".NoteModificationFragment">
 
-            <EditText
-                android:id="@+id/mod_note_fragment_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="0" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/mod_note_fragment_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:hint="@string/hintDescription"
+                    android:inputType="text" />
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/mod_note_fragment_marker"
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+
+
+            </LinearLayout>
             <EditText
                 android:id="@+id/mod_note_fragment_text"
                 android:layout_width="wrap_content"
@@ -37,17 +60,10 @@
                 android:layout_column="0"
                 android:layout_columnSpan="2" />
 
-            <ImageView
-                android:id="@+id/mod_note_fragment_marker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:layout_gravity="right" />
-
         </GridLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 
     <LinearLayout
         android:id="@+id/linear"
@@ -61,10 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:backgroundTint="@color/colorAccent"
             android:contentDescription="@string/save"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="@string/save" />
     </LinearLayout>
-
-
 </LinearLayout>

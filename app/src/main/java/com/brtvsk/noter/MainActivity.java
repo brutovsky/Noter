@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
         switch (position) {
             case 0:
+                noteListFragment.updateUI();
                 manageFragmentTransaction(NOTES_LIST_TAG);
                 return;
             case 1:
