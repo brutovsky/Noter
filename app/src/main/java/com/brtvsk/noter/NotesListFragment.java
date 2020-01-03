@@ -1,12 +1,16 @@
 package com.brtvsk.noter;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -25,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.brtvsk.noter.database.NoteDBSchema;
@@ -54,18 +59,23 @@ public class NotesListFragment extends Fragment {
     public NotesListFragment() {
     }
 
+    public NotesListFragment(String[] filter) {
+        this.filter = new HashSet(Arrays.asList(filter));
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            filter = new HashSet<>(Arrays.asList(savedInstanceState.getStringArray(EXTRA_FILTER)));
-        } else {
-            {
-                filter = new HashSet<>();
-                filter.add(Markers.IMPORTANT.toString());
-                filter.add(Markers.DEFAULT.toString());
+        if (filter == null)
+            if (savedInstanceState != null) {
+                filter = new HashSet<>(Arrays.asList(savedInstanceState.getStringArray(EXTRA_FILTER)));
+            } else {
+                {
+                    filter = new HashSet<>();
+                    filter.add(Markers.IMPORTANT.toString());
+                    filter.add(Markers.DEFAULT.toString());
+                }
             }
-        }
         setHasOptionsMenu(true);
     }
 
@@ -101,6 +111,12 @@ public class NotesListFragment extends Fragment {
         } else {
             notesAdapter.setCrimes(notes);
             notesAdapter.notifyDataSetChanged();
+        }
+        ImageView image = getActivity().findViewById(R.id.sad_picture);
+        if(notes.size() <= 0){
+            image.setVisibility(View.VISIBLE);
+        }else{
+            image.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -236,6 +252,7 @@ public class NotesListFragment extends Fragment {
             NotesStorage.getInstance(getActivity()).deleteNote(notes.get(position));
             notes.remove(position);
             notifyItemRemoved(position);
+            updateUI();
         }
 
         @Override
@@ -282,9 +299,9 @@ public class NotesListFragment extends Fragment {
     }
 
     private boolean createNote() {
-        Log.println(Log.ERROR,"AK","ad");
+        String[] filtr = new String[filter.size()];
         startActivity(NoteModificationActivity
-                .newIntent(getActivity()));
+                .newIntent(getActivity(), filter.toArray(filtr)));
         return true;
     }
 
@@ -359,9 +376,4 @@ public class NotesListFragment extends Fragment {
         popup.show();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.println(Log.ERROR,"AS","aSFsa");
-    }
 }

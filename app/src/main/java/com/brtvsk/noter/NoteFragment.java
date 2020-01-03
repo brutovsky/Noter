@@ -1,11 +1,14 @@
 package com.brtvsk.noter;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -26,13 +29,17 @@ import java.util.UUID;
 public class NoteFragment extends Fragment {
 
     private static final String ARG_NOTE_ID = "note_id";
+    public static final String DIALOG_DELETE = "delete";
 
     private EditText noteEditText;
     private TextView descriptionView;
     private ImageView noteMarkerView;
     private Note note;
 
-    public NoteFragment() {
+    private String[] filter;
+
+    public NoteFragment(String[] filter) {
+        this.filter = filter;
     }
 
     @Override
@@ -84,10 +91,10 @@ public class NoteFragment extends Fragment {
         return v;
     }
 
-    public static NoteFragment newInstance(UUID id) {
+    public static NoteFragment newInstance(UUID id,String filter[]) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_NOTE_ID, id);
-        NoteFragment fragment = new NoteFragment();
+        NoteFragment fragment = new NoteFragment(filter);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,18 +109,39 @@ public class NoteFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_delete_note: {
-                NotesStorage.getInstance(getActivity()).deleteNote(note);
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+                onDialogCreate(DIALOG_DELETE).show();
                 return true;
             }
-            case R.id.menu_item_edit:{
-                Intent intent = NoteModificationActivity.newIntent(getActivity(),note.getId());
+            case R.id.menu_item_edit: {
+                Intent intent = NoteModificationActivity.newIntent(getActivity(), note.getId(),filter);
                 startActivity(intent);
                 return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private Dialog onDialogCreate(String tag) {
+        switch (tag) {
+            case DIALOG_DELETE: {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.deleteConfirmation).setTitle(R.string.warning).setCancelable(true).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NotesStorage.getInstance(getActivity()).deleteNote(note);
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                return builder.create();
+            }
+            default: {
+                return null;
+            }
         }
     }
 

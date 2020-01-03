@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,10 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,10 +43,19 @@ public class MainActivity extends AppCompatActivity {
     public static final String NOTES_LIST_TAG = "notesListTag";
     public static final String SETTINGS_TAG = "settingsTag";
 
+    private static final String EXTRA_FILTER =
+            "FILTER";
+
+    private String filter[];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getIntent() != null)
+            filter = getIntent().getStringArrayExtra(EXTRA_FILTER);
+
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
 
         manageFragmentTransaction(NOTES_LIST_TAG);
@@ -98,6 +111,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(titles[position]);
     }
 
+    public static Intent newIntent(Context packageContext, String[] filter) {
+        Intent intent = new Intent(packageContext, MainActivity.class);
+        intent.putExtra(EXTRA_FILTER, filter);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        return intent;
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -127,12 +147,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(int position) {
+        ImageView image = findViewById(R.id.sad_picture);
         switch (position) {
             case 0:
                 noteListFragment.updateUI();
                 manageFragmentTransaction(NOTES_LIST_TAG);
                 return;
             case 1:
+                image.setVisibility(View.INVISIBLE);
                 manageFragmentTransaction(SETTINGS_TAG);
                 return;
         }
@@ -153,12 +175,15 @@ public class MainActivity extends AppCompatActivity {
     private void manageFragmentTransaction(String selectedFrag) {
         switch (selectedFrag) {
             case NOTES_LIST_TAG: {
+
                 if (getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG) != null) {
                     //if the fragment exists, show it.
                     getSupportFragmentManager().beginTransaction().show(getSupportFragmentManager().findFragmentByTag(NOTES_LIST_TAG)).commit();
                 } else {
                     //if the fragment does not exist, add it to fragment manager.
-                    noteListFragment = new NotesListFragment();
+                    if (filter != null) noteListFragment = new NotesListFragment(filter);
+                    else
+                        noteListFragment = new NotesListFragment();
                     getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, noteListFragment, NOTES_LIST_TAG).commit();
                 }
                 if (getSupportFragmentManager().findFragmentByTag(SETTINGS_TAG) != null) {

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.brtvsk.noter.utils.TextChangedListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -40,15 +41,26 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
     private ExtendedFloatingActionButton saveButton;
     private Note note;
 
-    public NoteModificationFragment() {
+    private String filter[];
+
+    private boolean MODIFICATION;
+
+    private ImageView popup;
+
+    public NoteModificationFragment(String filter[]) {
+        this.filter = filter;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID id = (UUID) getArguments().getSerializable(NoteModificationFragment.ARG_NOTE_ID);
-        if (id == null) note = newNote();
+        if (id == null) {
+            note = newNote();
+            MODIFICATION = false;
+        }
         else {
+            MODIFICATION = true;
             note = NotesStorage.getInstance(getActivity()).getNote(id);
         }
         setHasOptionsMenu(true);
@@ -58,6 +70,10 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_note_modification, container, false);
+
+        popup = v.findViewById(R.id.mod_note_fragment_marker);
+        popup.setOnClickListener(this);
+
         noteEditText = v.findViewById(R.id.mod_note_fragment_text);
         noteEditText.setText(note.getNote());
 
@@ -83,11 +99,11 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
 
         switch (note.getMarker()) {
             case DEFAULT: {
-                noteMarkerView.setBackgroundResource(R.drawable.default_24dp);
+                noteMarkerView.setImageResource(R.drawable.default_24dp);
                 break;
             }
             case IMPORTANT: {
-                noteMarkerView.setBackgroundResource(R.drawable.star_24dp);
+                noteMarkerView.setImageResource(R.drawable.star_24dp);
                 break;
             }
         }
@@ -97,10 +113,10 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
         return v;
     }
 
-    public static NoteModificationFragment newInstance(UUID noteId) {
+    public static NoteModificationFragment newInstance(UUID noteId, String filter[]) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_NOTE_ID, noteId);
-        NoteModificationFragment fragment = new NoteModificationFragment();
+        NoteModificationFragment fragment = new NoteModificationFragment(filter);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,9 +132,35 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
         switch (view.getId()) {
             case R.id.mode_save_button: {
                 onDialogCreate(DIALOG_TOSAVE).show();
+                break;
+            }
+            case R.id.mod_note_fragment_marker: {
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.fragment_list_popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.default_item:
+                                note.mark(Markers.DEFAULT);
+                                setMarkerImage(Markers.DEFAULT);
+                                return true;
+                            case R.id.important_item:
+                                note.mark(Markers.IMPORTANT);
+                                setMarkerImage(Markers.IMPORTANT);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popup.show();
+                break;
             }
         }
     }
+
 
     private Dialog onDialogCreate(String tag) {
         switch (tag) {
@@ -130,14 +172,25 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
                             NotesStorage.getInstance(getActivity()).addNote(note);
                         else
                             NotesStorage.getInstance(getActivity()).updateNote(note);
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        startActivity(intent);
+
+                        if (MODIFICATION) {
+                            Intent intent = NotePagerActivity.newIntent(getActivity(), note.getId(), filter);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = MainActivity.newIntent(getActivity(),filter);
+                            startActivity(intent);
+                        }
                     }
                 })
                         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                startActivity(intent);
+                                if (MODIFICATION) {
+                                    Intent intent = NotePagerActivity.newIntent(getActivity(), note.getId(), filter);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = MainActivity.newIntent(getActivity(),filter);
+                                    startActivity(intent);
+                                }
                             }
                         });
                 return builder.create();
@@ -146,5 +199,23 @@ public class NoteModificationFragment extends Fragment implements View.OnClickLi
                 return null;
             }
         }
+    }
+
+    public boolean isModification(){
+        return MODIFICATION;
+    }
+
+    private void setMarkerImage(Markers marker) {
+        switch (marker) {
+            case DEFAULT: {
+                popup.setImageResource(R.drawable.default_24dp);
+                break;
+            }
+            case IMPORTANT: {
+                popup.setImageResource(R.drawable.star_24dp);
+                break;
+            }
+        }
+
     }
 }
