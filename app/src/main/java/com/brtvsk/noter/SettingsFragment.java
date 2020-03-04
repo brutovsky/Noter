@@ -2,11 +2,11 @@ package com.brtvsk.noter;
 
 
 import android.os.Bundle;
-
 import androidx.preference.PreferenceFragmentCompat;
 
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+
+public class SettingsFragment extends PreferenceFragmentCompat   {
 
     public static final String
             KEY_PREF_EXAMPLE_SWITCH = "example_switch";
